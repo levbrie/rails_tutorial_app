@@ -8,6 +8,7 @@ gem 'rails', '3.2.9'
 group :development, :test do
 	gem 'sqlite3'
 	gem 'rspec-rails', '2.9.0'
+	gem 'guard-rspec', '0.5.5'
 end
 
 
@@ -27,6 +28,12 @@ gem 'jquery-rails'
 
 group :test do 
 	gem 'capybara', '1.1.2'
+
+	# system-dependent gems for running Guard and getting Growl notifications
+	gem 'rb-fsevent', :require => false
+	gem 'growl', '1.0.3'
+	gem 'guard-spork'
+	gem 'spork'
 end
 
 # indluce PostgreSQL gem for heroku deployment
