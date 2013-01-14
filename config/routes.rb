@@ -1,9 +1,15 @@
 RailsTutorialApp::Application.routes.draw do
-  get "static_pages/home"
+  get "users/new"
 
-  get "static_pages/help"
-  get "static_pages/about"
-  get "static_pages/contact"
+  # see further down for the root example used here
+  root :to => 'static_pages#home'
+  # each of these also give URI helpers in the following form:
+  # root_path => '/'
+  # root_url => 'http://localhost:3000/'
+  match '/help', to: 'static_pages#help'
+  match '/about', to: 'static_pages#about'
+  match '/contact', to: 'static_pages#contact'
+  match '/signup', to: 'users#new'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

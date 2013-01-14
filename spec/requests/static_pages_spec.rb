@@ -2,71 +2,59 @@ require 'spec_helper'
 
 describe "Static pages" do
   let(:base_title) { "Ruby on Rails Tutorial Sample App" }
+
+  subject { page }    # page is the subjects of the tests
   describe "Home page" do
+    before { visit root_path }  # synonymous with before(:each), this creates
+    # a before block to visit root path before each example
+    
+    it { should have_selector('h1', text: 'Sample App') }
+    it {should have_selector 'title', text: full_title('')}
+    it {should_not have_selector 'title', text: '| Home'}
   	# what's in quotes is for humans, irrelevant to RSpec
-    it "should have the h1 'Sample App'" do
+    
       # Run the generator again with the --webrat flag if you want to use webrat
       # methods/matchers
       # original: get static_pages_index_path
       # response.status.should be(200)
       # use Capybara function visit to simulate visiting URI /static_pages/home 
       # in browser
-      visit '/static_pages/home'
       # use Capybara page variable to test content in resulting page
       # remember to use bundle exec with command:
       # rspec spec/requests/static_pages_spec.rb
       # to ensure RSpec runs in environment specified by Gemfile
-      page.should have_selector('h1', :text => 'Sample App')
-    end
-
-    it "should have the base title" do
-      visit '/static_pages/home'
-      page.should have_selector('title', 
-        :text => "Ruby on Rails Tutorial Sample App")
-    end
-
-    it "should have a custom page title" do
-      visit '/static_pages/home'
-      page.should_not have_selector('title', :text => '| Home')
-    end
+      # page.should have_selector('h1', :text => 'Sample App')
   end
 
   describe "Help page" do 
-    it "should have the h1 'Help'" do 
-      visit '/static_pages/help'
-      page.should have_selector('h1', :text => 'Help')
-    end
-
-    it "should have the title 'Help'" do
-      visit '/static_pages/help'
-      page.should have_selector('title', 
-        :text => "#{base_title} | Help")
-    end
+    before { visit help_path }
+    it { should have_selector('h1', text: 'Help') }
+    it { should have_selector('title', text: full_title('Help')) }
   end
 
-  describe "About page" do 
-    it "should have the h1 'About'" do 
-      visit '/static_pages/about'
-      page.should have_selector('h1', :text => "About")
-    end
-
-    it "should have the title 'About'" do 
-      visit '/static_pages/about'
-      page.should have_selector('title', 
-        :text => "#{base_title} | About")
-    end
+  describe "About page" do
+    before { visit about_path }
+    it { should have_selector('h1', text: 'About')}
+    it { should have_selector('title', text: full_title('About')) }
   end
+
+  # old about spec 
+  # describe "About page" do 
+  #   it "should have the h1 'About'" do 
+  #     visit about_path
+  #     page.should have_selector('h1', :text => "About")
+  #   end
+
+  #   it "should have the title 'About'" do 
+  #     visit about_path
+  #     page.should have_selector('title', 
+  #       :text => "#{base_title} | About")
+  #   end
+  # end
 
   describe "Contact page" do 
-    it "should have the h1 'Contact'" do
-      visit '/static_pages/contact'
-      page.should have_selector('h1', :text => "Contact")
-    end
-
-    it "should have the title 'Contact'" do
-      visit '/static_pages/contact'
-      page.should have_selector('title', 
-        :text => "#{base_title} | Contact")
-    end
+    before { visit contact_path }
+    it {should have_selector('h1', text: 'Contact')}
+    it {should have_selector('title', text: full_title('Contact'))}
   end
 end

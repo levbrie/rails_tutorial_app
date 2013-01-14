@@ -7,6 +7,9 @@
  *
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
+ * 
+ * The 2 lines below ensure via the Sprockets gem that all CSS files in this directory, i.e. 
+ * app/assets/stylesheets, are included, as well as all CSS in this file
  *
  *= require_self
  *= require_tree .

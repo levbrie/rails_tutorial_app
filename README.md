@@ -4,6 +4,10 @@ This is the sample application for
 [*Ruby on Rails Tutorial: Learn Rails by Example*](http://railstutorial.org/)
 by [Michael Hartl](http://michaelhartl.com/).
 
+
+Notes: 
+Partials that go on every page have been placed in the app/views/layouts directory, such as _header.html.erb and _shim.html.erb, while utility partials that are useful on multiple, but not all views, are placed in the /shared directory.
+
 == Welcome to Rails
 
 Rails is a web-application framework that includes everything needed to create
