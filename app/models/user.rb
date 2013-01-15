@@ -28,8 +28,9 @@ class User < ActiveRecord::Base
   # since not all database adapters use case-sensitive indices
   # this line passes a block to the before_save callback and sets user's email
   # address to a lowercase version of its current value
-  before_save { |user| user.email = email.downcase }
-
+  # following line could be: before_save { |user| user.email = email.downcase }
+  before_save { self.email.downcase! }
+  
   validates :name, presence: true, length: {maximum: 50}
   # same as validates(:name, presence: true)
   # validate email with regex
