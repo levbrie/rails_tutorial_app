@@ -2,9 +2,15 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.9'
 gem 'bootstrap-sass', '2.0.0'
+gem 'bcrypt-ruby', '3.0.1'  # adds state-of-the-art encryption hash function
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+group :development do
+	# provides annotation capabilities for Rails models etc.
+	gem 'annotate', '~> 2.4.1.beta'
+end
 
 group :development, :test do
 	gem 'sqlite3'
