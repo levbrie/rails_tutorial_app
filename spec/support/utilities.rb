@@ -19,8 +19,29 @@ def valid_signin(user)
   click_button "Sign in"
 end
 
+RSpec::Matchers.define :have_heading do |number, heading|
+	match do |page|
+		page.should have_selector("h#{number}", text: heading)
+	end
+end
+
+RSpec::Matchers.define :be_entitled do |title|
+	match do |page|
+		page.should have_selector('title', text: title)
+	end
+end
+
+
 RSpec::Matchers.define :have_error_message do |message|
 	match do |page|
 		page.should have_selector('div.alert.alert-error', text: message)
+	end
+end
+
+# check if it has any error message at all - for use with:
+# should_not have_error_message (primarily)
+RSpec::Matchers.define :have_error_message do 
+	match do |page|
+		page.should have_selector('div.alert.alert-error')
 	end
 end
