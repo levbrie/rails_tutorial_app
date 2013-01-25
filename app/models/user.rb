@@ -30,7 +30,12 @@ class User < ActiveRecord::Base
   # address to a lowercase version of its current value
   # following line could be: before_save { |user| user.email = email.downcase }
   before_save { self.email.downcase! }
-  
+
+  # now let's add a callback to create the remember token
+  # a callback is a method that gets invoked at a particular point in the 
+  # lifetime of an Active Record object (see Rails API entry on callbacks)
+  before_save :create_remember_token
+
   validates :name, presence: true, length: {maximum: 50}
   # same as validates(:name, presence: true)
   # validate email with regex
@@ -50,6 +55,15 @@ class User < ActiveRecord::Base
   					uniqueness: { case_sensitive: false }
 
   # presence and length validations for password
-  validates :password, presence: true, length: {minimum: 6}
+  validates :password, length: {minimum: 6}  # presence: true, no longer needed
   validates :password_confirmation, presence: true
+
+  # the create_remember_token is only used internally so we make it private in 
+  # order to prevent it from being exposed to outside users (although now 
+  # User.first.create_remember_token on the console will raise a NoMethodError
+  # exception)
+  private
+    def create_remember_token
+      self.remember_token = SecureRandom.urlsafe_base64
+    end
 end

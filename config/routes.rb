@@ -1,6 +1,7 @@
 RailsTutorialApp::Application.routes.draw do
   # get RESTful URIs to work
   resources :users
+  resources :sessions, only: [:new, :create, :destroy]
   # above action endows application with all actions needed for RESTful 
   # Users resource, along with a large number of named routes for generating
   # user URIs, so:
@@ -16,6 +17,9 @@ RailsTutorialApp::Application.routes.draw do
   match '/about', to: 'static_pages#about'
   match '/contact', to: 'static_pages#contact'
   match '/signup', to: 'users#new'
+  match '/signin',  to: 'sessions#new'
+  # for signout via: :delete indicates it's invoked using an HTTP DELETE request 
+  match '/signout', to: 'sessions#destroy', via: :delete
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

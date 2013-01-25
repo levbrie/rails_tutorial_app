@@ -1,5 +1,5 @@
 // This is a manifest file that'll be compiled into application.js, which will include all the files
-// listed below.
+// listed below.  @levbrie we refer to this as part of the asset pipeline
 //
 // Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
 // or vendor/assets/javascripts of plugins, if any, can be referenced here using a relative path.
@@ -9,7 +9,11 @@
 //
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
+// 
+// this file uses Sprockets library to include the Bootstrap JavaScript library available thanks to 
+// the bootstrap-sass gem in gemfile 
 //
 //= require jquery
 //= require jquery_ujs
+//= require bootstrap
 //= require_tree .
