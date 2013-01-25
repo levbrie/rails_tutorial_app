@@ -1,5 +1,11 @@
 RailsTutorialApp::Application.routes.draw do
-  get "users/new"
+  # get RESTful URIs to work
+  resources :users
+  # above action endows application with all actions needed for RESTful 
+  # Users resource, along with a large number of named routes for generating
+  # user URIs, so:
+  #     get "users/new"
+  # is no longer needed
 
   # see further down for the root example used here
   root :to => 'static_pages#home'

@@ -16,8 +16,18 @@
 	<body>
 		<%= render 'layouts/header' %>
 		<div class="container">
+			<!-- Adds contents of the special flash variable to site 
+			layout for messages that appear and then disappear on 
+			subsequent reloads -->
+			<% flash.each do |key, value| %>
+				<div class="alert alert-<%= key %>"><%= value %></div>
+			<% end %>
 			<%= yield %>
 			<%= render 'layouts/footer' %>
+			<!-- add debug info to site layout to display useful info about
+				each page using the built-in debug method and params variable, 
+				and make sure it only displays in development env -->
+			<%= debug(params) if Rails.env.development? %>
 		</div>
 
 	</body>

@@ -1,0 +1,1 @@
+Sample User: Rails Tutorial, example@railstutorial.org, password: example

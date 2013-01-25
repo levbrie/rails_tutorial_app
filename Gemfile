@@ -41,6 +41,9 @@ group :test do
 	gem 'growl', '1.0.3'
 	gem 'guard-spork'
 	gem 'spork'
+	# Factory Girl generates factories useful for defining objects to insert 
+	# into database for testing
+	gem 'factory_girl_rails', '1.4.0'
 end
 
 # indluce PostgreSQL gem for heroku deployment
