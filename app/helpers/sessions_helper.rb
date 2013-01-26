@@ -31,10 +31,14 @@ module SessionsHelper
     @current_user ||= User.find_by_remember_token(cookies[:remember_token])
   end
 
+  def current_user?(user)
+    user == current_user
+  end
   # we place sign_out at the end of our sessions_helper.rb, since this 
   # represents the end of a session, and all else is in between
   def sign_out
     self.current_user = nil    
     cookies.delete(:remember_token)
   end
+
 end
