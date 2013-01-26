@@ -20,4 +20,9 @@ class UsersController < ApplicationController
   		render 'new'
   	end
   end
+
+  # RESTful edit action that starts by finding the user
+  def edit
+    @user = User.find(params[:id])
+  end
 end
