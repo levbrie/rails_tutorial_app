@@ -41,4 +41,20 @@ module SessionsHelper
     cookies.delete(:remember_token)
   end
 
+  # implement friendly forwarding (after sign-in, redirecting users to the page 
+  # they were trying to go to rather than profile page) 
+  # redirect_back_r redirects to requested URI if it exists or some default URI 
+  # if not - to redirect after successful signin we add this to the Sessions 
+  # controller create action
+  def redirect_back_or(default)
+    redirect_to(session[:return_to] || default)
+    session.delete(:return_to)
+  end
+
+  # puts requested URI in session variable under the key :return_to
+  # make use of store_location by adding to sign_in_user before filter in 
+  # users_controller.rb 
+  def store_location
+    session[:return_to] = request.url
+  end
 end

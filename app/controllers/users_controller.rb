@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
   # before filter arranges for a method to be called before the given actions
-  before_filter :signed_in_user, only: [:edit, :update]  # i.e. these actions
+  before_filter :signed_in_user,  only: [:edit, :update]  # i.e. these actions
   # 2nd before filter to call the correct_user method and make sure only the 
   # current user can only edit his account and nothing else
-  before_filter :correct_user, only: [:edit, :update]
+  before_filter :correct_user,    only: [:edit, :update]
 
   def show
   	@user = User.find(params[:id])
@@ -50,11 +50,16 @@ class UsersController < ApplicationController
   private 
   # everything after this is private?
     def signed_in_user
-      redirect_to signin_path, notice: "Please sign in." unless signed_in?
-      # the above uses a shortcut for setting flash[:notice] by passing an 
-      # options hash to the redirect_to function.  It is equivalent to:
-      #   flash[:notice] = "Please sign in."
-      #   redirect_to signin_path
+      unless signed_in?
+        # keep track of location for friendly forwarding to return to location
+        # user requested after a successful sign-in
+        store_location       
+        redirect_to signin_path, notice: "Please sign in." unless signed_in?
+        # the above uses a shortcut for setting flash[:notice] by passing an 
+        # options hash to the redirect_to function.  It is equivalent to:
+        #   flash[:notice] = "Please sign in."
+        #   redirect_to signin_path
+      end
     end
 
     def correct_user 
