@@ -25,7 +25,8 @@ describe User do
 	it {should respond_to(:remember_token)}
 	it {should respond_to(:admin)}
 	# require a User object to respond to authenticate
-	it { should respond_to(:authenticate) }
+	it {should respond_to(:authenticate)}
+	it {should respond_to(:microposts)}
 
 	it {should be_valid}	# sanity check to verify that @user
 	# remember that whenever an object responds to a boolean foo? rspec
@@ -168,5 +169,32 @@ describe User do
 		# the line below is equivalent to: 
 		# it { @user.remember_token.should_not be_blank }
 		its(:remember_token) { should_not be_blank }
+	end
+
+	describe "micropost associations" do
+		before {@user.save}
+		let!(:older_micropost) do
+			FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
+		end
+
+		let!(:newer_micropost) do
+			FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
+		end
+
+		it "should have the right microposts in the right order" do
+			@user.microposts.should == [newer_micropost, older_micropost]
+		end
+
+		it "should destroy associated microposts" do
+			microposts = @user.microposts
+			@user.destroy
+			microposts.each do |micropost|
+				Micropost.find_by_id(micropost.id).should be_nil
+				# to use find, which raises an exception, we would need:
+				# lambda do
+				# 	Micropost.find(micropost.id)
+				# end.should raise_error(ActiveRecord::RecordNotFound)
+			end
+		end
 	end
 end

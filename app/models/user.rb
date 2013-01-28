@@ -22,6 +22,10 @@ class User < ActiveRecord::Base
     # a "password_confirmation" attribute) are automatically added.
     # You can add more validations by hand if need be.
   has_secure_password
+  # has_many association for microposts
+  # dependent: :destroy arranges for dependent microposts to be destroyed when
+  # user itself is destroyed
+  has_many :microposts, dependent: :destroy      
 
   # use before_save callback to force Rails to downcase email attribute 
   # before saving user to the database in order to assure email uniqueness
