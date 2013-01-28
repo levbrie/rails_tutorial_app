@@ -20,19 +20,27 @@ class UsersController < ApplicationController
   
   # adding an @user variable to the new action
   def new
-  	@user = User.new
+    if signed_in?
+      redirect_to root_path, notice: "Please sign out in order to create a new user."
+    else
+      @user = User.new
+    end
   end
 
   def create
-  	@user = User.new(params[:user])
-  	if @user.save
-      sign_in @user     # signs in the user upon signup
-      flash[:success] = "Welcome to the Sample App!"
-  		# Handle a successful save.
-      redirect_to @user
-  	else
-  		render 'new'
-  	end
+    if signed_in?
+      redirect_to root_path, notice: "Please sign out in order to create a new user."
+    else
+    	@user = User.new(params[:user])
+    	if @user.save
+        sign_in @user     # signs in the user upon signup
+        flash[:success] = "Welcome to the Sample App!"
+    		# Handle a successful save.
+        redirect_to @user
+    	else
+    		render 'new'
+    	end
+    end
   end
 
   # RESTful edit action that starts by finding the user
@@ -57,10 +65,15 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    # use method chaining to combine find and destroy into one line
-    User.find(params[:id].destroy)
-    flash[:success] = "User destroyed."
-    redirect_to users_path
+    @user = User.find(params[:id])
+    if current_user?(@user)
+      redirect_to users_path, notice: "Admin cannot delete himself"
+    else 
+      # use method chaining to combine find and destroy into one line
+      @user.destroy
+      flash[:success] = "User destroyed."
+      redirect_to users_path
+    end
   end
 
   private 

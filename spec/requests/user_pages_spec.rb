@@ -8,17 +8,11 @@ describe "User pages" do
     let(:user) { FactoryGirl.create(:user) }
 
     before(:each) do     # same as before but used to contrast with before(:all)
-      sign_in user
+      sign_in FactoryGirl.create(:user)
+      FactoryGirl.create(:user, name: "Bob", email: "bob@example.com")
+      FactoryGirl.create(:user, name: "Ben", email: "ben@example.com")
       visit users_path
     end
-
-    # above block replaces:
-    # before do
-    #   sign_in FactoryGirl.create(:user)
-    #   FactoryGirl.create(:user, name: "Bob", email: "bob@example.com")
-    #   FactoryGirl.create(:user, name: "Emily", email: "emily@example.com")
-    #   visit users_path
-    # end
 
     it {should be_entitled('All users')}
     it {should have_heading(1, 'All users')}
@@ -50,11 +44,16 @@ describe "User pages" do
           visit users_path
         end
 
-        it {should have_link('delete', href: user_path(User.first))}
+        it { should have_link('delete', href: user_path(User.first)) }
         it "should be able to delete another user" do
-          expect {click_link('delete', href: user_path(admin))}
+          expect {click_link('delete')}.to change(User, :count).by(-1)
         end
         it {should_not have_link('delete', href: user_path(admin))}
+
+        # it "should prevent admin users from destroying themselves" do
+        #   before { delete user_path(admin) }
+        #   it { should have_error_message('Admin cannot delete himself')}
+        # end
       end
     end
   end
@@ -92,7 +91,7 @@ describe "User pages" do
         fill_in "Name",         with: "Example User"
         fill_in "Email",        with: "user@example.com"
         fill_in "Password",     with: "foobar"
-        fill_in "Confirmation", with: "foobar"
+        fill_in "Confirm Password", with: "foobar"
       end
 
       it "should create a user" do
@@ -135,7 +134,8 @@ describe "User pages" do
     describe "page" do
       it {should have_selector('h1',    text: "Update your profile")}
       it {should have_selector('title', text: "Edit user")}
-      it {should have_link('change', href: 'http://gravatar.com/emails')}
+      it {should have_link('Change Gravatar', 
+                            href: 'http://gravatar.com/emails')}
     end
 
     describe "with invalid information" do

@@ -41,6 +41,16 @@ describe "Authentication" do
     it {should have_link('Settings', href: edit_user_path(user))}
     it {should have_link('Sign out', href: signout_path)}
     it {should_not have_link('Sign in', href: signin_path)}
+
+    # describe "when attempting to access create action by completing signin" do
+    #   before {post sessions_path}
+    #   specify {response.should redirect_to(user_path(user))}
+    # end
+  end
+
+  describe "with invalid information" do
+    it {should_not have_link('Profile')} 
+    it {should_not have_link('Settings')}
   end
 
   describe "authorization" do
@@ -50,14 +60,26 @@ describe "Authentication" do
       describe "when attempting to visit a protected page" do
         before do
           visit edit_user_path(user)
-          fill_in "Email",    with: user.email
-          fill_in "Password", with: user.password
-          click_button "Sign in"
+          # fill_in "Email",    with: user.email
+          # fill_in "Password", with: user.password
+          # click_button "Sign in"
+          sign_in user
         end
 
         describe "after signing in" do
           it "should render the desired protected page" do
             page.should be_entitled('Edit user')
+          end
+
+          describe "when signing in again" do
+            before do
+              visit signin_path
+              sign_in user
+            end
+
+            it "should render the default (profile) page" do
+              page.should be_entitled(user.name)
+            end
           end
         end
       end

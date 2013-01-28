@@ -29,7 +29,32 @@
 				each page using the built-in debug method and params variable, 
 				and make sure it only displays in development env -->
 			<%= debug(params) if Rails.env.development? %>
-		</div>
 
+
+		</div>
+		<% if Rails.env.development? %>
+			<div class="container">
+				<div class="hero">
+					<h4>Original URL:</h4>
+					<p><%= request.original_url() %></p>
+					<h4>Local?:</h4>
+					<p class="request-par">
+						<%= request.local? %>
+					</p>					
+					<h4>IP:</h4>
+					<p class="request-par">
+						<%= request.ip %>
+					</p>
+					<h4>Query Parameters</h4>
+					<p class="request-par">
+						<%= request.query_parameters %>
+					</p>
+					<h4>Server Software:</h4>
+					<p class="request-par">
+						<%= request.server_software %>
+					</p>
+				</div>
+			</div>
+		<% end %>
 	</body>
 </html>

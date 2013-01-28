@@ -1,22 +1,26 @@
 class SessionsController < ApplicationController
   
   def new     # RESTful convention of using new for a signin page (new session)
-  
+
   end
 
   def create  # RESTful convention - create to complete signin (create session)
-  	user = User.find_by_email(params[:email])
-  	if user && user.authenticate(params[:password])
-  		# Sign the user in and redirect to the user's show page.
-  		sign_in user
-  		# replace: redirect_to user to enable friendly forwarding
-      redirect_back_or user
-  	else
-  		# use flash.now to dsiplay flash messages on rendered pages
-  		# and have them disappear as soon as their is a request (unlike flash)
-  		flash.now[:error] = 'Invalid email/password combination' 
-  		render 'new'
-  	end
+    # if signed_in?
+    #   redirect_to user_path(current_user), notice: "Please sign out in order to sign in as a new user."
+    # else
+      user = User.find_by_email(params[:email])
+    	if user && user.authenticate(params[:password])
+    		# Sign the user in and redirect to the user's show page.
+    		sign_in user
+    		# replace: redirect_to user to enable friendly forwarding
+        redirect_back_or user
+    	else
+    		# use flash.now to dsiplay flash messages on rendered pages
+    		# and have them disappear as soon as their is a request (unlike flash)
+    		flash.now[:error] = 'Invalid email/password combination' 
+    		render 'new'
+    	end
+    # end
   end
 
 

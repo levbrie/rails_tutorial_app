@@ -5,20 +5,8 @@
 	<div class="span6 offset3">
 		<!-- form_for takes a block with one variable f (for form) -->
 		<%= form_for(@user) do |f| %>
-			<!-- Code to display error messages on the signup form -->
-			<%= render 'shared/error_messages' %>
-
-			<%= f.label :name %>
-			<%= f.text_field :name %>
-
-			<%= f.label :email %>
-			<%= f.text_field :email %>
-
-			<%= f.label :password %>
-			<%= f.password_field :password %>
-
-			<%= f.label :password_confirmation, "Confirmation" %>
-			<%= f.password_field :password_confirmation %>
+			<%= render 'fields', f: f %>
+			<!-- must pass in form variable f explicitly as a local variable -->
 
 			<%= f.submit "Create my account", class: "btn btn-large btn-primary" %>
 		<% end %>
