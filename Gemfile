@@ -3,7 +3,9 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.9'
 gem 'bootstrap-sass', '2.0.0'
 gem 'bcrypt-ruby', '3.0.1'  # adds state-of-the-art encryption hash function
-
+gem 'faker', '1.0.1'		# allows us to make semi-realistic users, etc.
+gem 'will_paginate', '3.0.3' 			# easy pagination
+gem 'bootstrap-will_paginate', '0.0.6'	# configures will_paginate for Bootstrap
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 

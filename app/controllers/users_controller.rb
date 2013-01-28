@@ -1,9 +1,18 @@
 class UsersController < ApplicationController
   # before filter arranges for a method to be called before the given actions
-  before_filter :signed_in_user,  only: [:edit, :update]  # i.e. these actions
+  before_filter :signed_in_user,  only: [:index, :edit, :update, :destroy]  
   # 2nd before filter to call the correct_user method and make sure only the 
   # current user can only edit his account and nothing else
   before_filter :correct_user,    only: [:edit, :update]
+  # add before filter restricting destroy action to admins
+  before_filter :admin_user,      only: :destroy
+
+  def index
+    # pull all the users out of the database and assign them to @users i.v.
+    # @users = User.all 
+    # for pagination, we replace above with:
+    @users = User.paginate(page: params[:page])  # paginate users in index 
+  end
 
   def show
   	@user = User.find(params[:id])
@@ -47,6 +56,13 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    # use method chaining to combine find and destroy into one line
+    User.find(params[:id].destroy)
+    flash[:success] = "User destroyed."
+    redirect_to users_path
+  end
+
   private 
   # everything after this is private?
     def signed_in_user
@@ -65,5 +81,10 @@ class UsersController < ApplicationController
     def correct_user 
       @user = User.find(params[:id])
       redirect_to(root_path) unless current_user?(@user)
+    end
+
+    # used to make sure only admins can destroy users
+    def admin_user
+      redirect_to(root_path) unless current_user.admin?
     end
 end

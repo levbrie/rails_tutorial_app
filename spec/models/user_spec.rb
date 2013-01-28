@@ -23,12 +23,20 @@ describe User do
 	it {should respond_to(:password)}
 	it {should respond_to(:password_confirmation)}
 	it {should respond_to(:remember_token)}
+	it {should respond_to(:admin)}
 	# require a User object to respond to authenticate
 	it { should respond_to(:authenticate) }
 
 	it {should be_valid}	# sanity check to verify that @user
 	# remember that whenever an object responds to a boolean foo? rspec
 	# has a corresponding test method called be_foo
+	it {should_not be_admin}
+
+	describe "with admin attribute set to 'true'" do
+		before { @user.toggle!(:admin) }
+
+		it { should be_admin }
+	end
 	describe "when name is not present" do
 		before {@user.name = " "}  	# sets user's name invalid blank value
 		it {should_not be_valid}	# checks this user object is not valid
