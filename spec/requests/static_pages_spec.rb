@@ -26,6 +26,11 @@ describe "Static pages" do
         visit root_path
       end
 
+      # test for sidebar microposts counts and proper pluralization (ex 10.1)
+      it "should have the right micropost count and pluralization" do
+        page.should have_selector('span', text: "2 microposts")
+      end
+
       it "should render the user's feed" do
         user.feed.each do |item| 
           page.should have_selector("li##{item.id}", text: item.content)

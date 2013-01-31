@@ -12,6 +12,15 @@
 	  <%= javascript_include_tag "application" %>
 	  <%= csrf_meta_tags %>
 	  <%= render 'layouts/shim' %>
+	  <script type="text/javascript">
+	  	// Exercise 10.7 add JavaScript display to Home page to count down chars
+	  	jQuery(document).ready(function() { // DOM not loaded, must use ready event
+	  		$('#micropost_content').keypress(function() {
+	  			var contentStringLength = $('#micropost_content').val().length;
+	  			$('.micropost-counter').html(139 - contentStringLength);
+				});
+	  	});
+	  </script>
 	</head>
 	<body>
 		<%= render 'layouts/header' %>
