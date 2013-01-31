@@ -62,6 +62,13 @@ class User < ActiveRecord::Base
   validates :password, length: {minimum: 6}  # presence: true, no longer needed
   validates :password_confirmation, presence: true
 
+  def feed
+    # This is preliminary. See "Following users" for the full implementation
+    # The ? ensures that id is properly escaped before being included in the
+    # underlying SQL query in order to avoid SQL injection security hole
+    Micropost.where("user_id = ?", id)
+  end
+
   # the create_remember_token is only used internally so we make it private in 
   # order to prevent it from being exposed to outside users (although now 
   # User.first.create_remember_token on the console will raise a NoMethodError

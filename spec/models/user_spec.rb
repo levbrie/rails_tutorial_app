@@ -27,6 +27,7 @@ describe User do
 	# require a User object to respond to authenticate
 	it {should respond_to(:authenticate)}
 	it {should respond_to(:microposts)}
+	it {should respond_to(:feed)}		# feed of microposts on home page
 
 	it {should be_valid}	# sanity check to verify that @user
 	# remember that whenever an object responds to a boolean foo? rspec
@@ -176,7 +177,6 @@ describe User do
 		let!(:older_micropost) do
 			FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
 		end
-
 		let!(:newer_micropost) do
 			FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
 		end
@@ -195,6 +195,18 @@ describe User do
 				# 	Micropost.find(micropost.id)
 				# end.should raise_error(ActiveRecord::RecordNotFound)
 			end
+		end
+
+		describe "status" do
+			let(:unfollowed_post) do
+				FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+			end
+
+			# the array include? method (should include in RSpec boolean convention)
+			# checks if an array includes the given element
+			its(:feed) {should include(newer_micropost)}	
+			its(:feed) {should include(older_micropost)}
+			its(:feed) {should_not include(unfollowed_post)}
 		end
 	end
 end

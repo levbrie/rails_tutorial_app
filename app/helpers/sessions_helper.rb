@@ -34,6 +34,20 @@ module SessionsHelper
   def current_user?(user)
     user == current_user
   end
+
+  def signed_in_user
+    unless signed_in?
+      # keep track of location for friendly forwarding to return to location
+      # user requested after a successful sign-in
+      store_location       
+      redirect_to signin_path, notice: "Please sign in." 
+      # the above uses a shortcut for setting flash[:notice] by passing an 
+      # options hash to the redirect_to function.  It is equivalent to:
+      #   flash[:notice] = "Please sign in."
+      #   redirect_to signin_path
+    end
+  end
+
   # we place sign_out at the end of our sessions_helper.rb, since this 
   # represents the end of a session, and all else is in between
   def sign_out

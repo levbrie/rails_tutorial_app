@@ -16,6 +16,7 @@ class UsersController < ApplicationController
 
   def show
   	@user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
   
   # adding an @user variable to the new action
@@ -29,7 +30,7 @@ class UsersController < ApplicationController
 
   def create
     if signed_in?
-      redirect_to root_path, notice: "Please sign out in order to create a new user."
+      redirect_to user_path(current_user), notice: "Please sign out in order to create a new user."
     else
     	@user = User.new(params[:user])
     	if @user.save
@@ -78,18 +79,6 @@ class UsersController < ApplicationController
 
   private 
   # everything after this is private?
-    def signed_in_user
-      unless signed_in?
-        # keep track of location for friendly forwarding to return to location
-        # user requested after a successful sign-in
-        store_location       
-        redirect_to signin_path, notice: "Please sign in." unless signed_in?
-        # the above uses a shortcut for setting flash[:notice] by passing an 
-        # options hash to the redirect_to function.  It is equivalent to:
-        #   flash[:notice] = "Please sign in."
-        #   redirect_to signin_path
-      end
-    end
 
     def correct_user 
       @user = User.find(params[:id])

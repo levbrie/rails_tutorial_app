@@ -1,4 +1,4 @@
-require 'spec_helper'
+ require 'spec_helper'
 
 describe "Authentication" do
   subject { page }
@@ -42,10 +42,10 @@ describe "Authentication" do
     it {should have_link('Sign out', href: signout_path)}
     it {should_not have_link('Sign in', href: signin_path)}
 
-    # describe "when attempting to access create action by completing signin" do
-    #   before {post sessions_path}
-    #   specify {response.should redirect_to(user_path(user))}
-    # end
+    describe "submitting to the create action" do
+      before {post users_path}
+      specify {response.should redirect_to(user_path(user))}
+    end
   end
 
   describe "with invalid information" do
@@ -99,6 +99,21 @@ describe "Authentication" do
         describe "visiting the user index" do
           before { visit users_path }
           it { should be_entitled('Sign in')}
+        end
+      end
+
+      describe "in the Microposts controller" do
+        describe "submitting to the cfreate action" do
+          before {post microposts_path}
+          specify {response.should redirect_to(signin_path)}
+        end
+
+        describe "submitting to the destroy action" do
+          before do
+            micropost = FactoryGirl.create(:micropost)
+            delete micropost_path(micropost)
+          end
+          specify {response.should redirect_to(signin_path)}
         end
       end
     end

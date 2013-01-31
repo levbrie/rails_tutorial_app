@@ -1,0 +1,16 @@
+<!-- partial for user info sidebar -->
+
+<a href="<%= user_path(current_user) %>">
+	<!-- uses gravatar_for helper defined in app/helpers/users_helper.rb -->
+	<%= gravatar_for current_user, size: 52 %>
+</a>
+<h1>
+	<%= current_user.name %>
+</h1>
+<span>
+	<%= link_to "view my profile", current_user %>
+</span>
+<span>
+	<!-- pluralize automatically pluralizes words when appropriate "1 micropost" but "2 microposts" -->
+	<%= pluralize(current_user.microposts.count, "micropost") %>
+</span>
