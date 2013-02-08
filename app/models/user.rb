@@ -25,7 +25,24 @@ class User < ActiveRecord::Base
   # has_many association for microposts
   # dependent: :destroy arranges for dependent microposts to be destroyed when
   # user itself is destroyed
-  has_many :microposts, dependent: :destroy      
+  has_many :microposts, dependent: :destroy    
+  # implementing the user/relationships has_many association
+  # because users are identified with foreign key follower_id in Relationship
+  # model, we have to tell rails to use user as foreign key for follower_id
+  # dependent: :destroy makes it so user's relationships are destroyed when
+  # the user is destroyed
+  has_many :relationships, foreign_key: "follower_id", dependent: :destroy  
+
+  # instead of user.followeds (from foreign key followed_id)
+  #  we want user.followed_users so we override the
+  # Rails default with the :source parameter in our has_many relationship
+  has_many :followed_users, through: :relationships, source: :followed
+
+  # implements user.followers using reverse relationships
+  has_many :reverse_relationships, foreign_key: "followed_id", 
+                                                  class_name: "Relationship",
+                                                  dependent:  :destroy
+  has_many :followers, through: :reverse_relationships, source: :follower
 
   # use before_save callback to force Rails to downcase email attribute 
   # before saving user to the database in order to assure email uniqueness
@@ -67,6 +84,30 @@ class User < ActiveRecord::Base
     # The ? ensures that id is properly escaped before being included in the
     # underlying SQL query in order to avoid SQL injection security hole
     Micropost.where("user_id = ?", id)
+  end
+
+  # boolean to check if one use is following another
+  def following?(other_user)
+    relationships.find_by_followed_id(other_user.id)
+  end
+
+  # follow! method should always work so we use ! to raise exception on failure
+  # this method allows us to write user.follow!(other_user)
+  def follow!(other_user)
+    relationships.create!(followed_id: other_user.id)
+  end
+
+  # unfollow by destorying a user relationship
+  # unfollow does not actually raise an exception on failure, but we add it for
+  # symmetry purposes
+  def unfollow!(other_user)
+    relationships.find_by_followed_id(other_user.id).destroy
+  end
+
+  def feed
+    # add completed feed to User model 
+    # (deferring work to Micropost.from_users_followed_by)
+    Micropost.from_users_followed_by(self)
   end
 
   # the create_remember_token is only used internally so we make it private in 

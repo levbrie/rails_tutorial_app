@@ -1,6 +1,10 @@
 RailsTutorialApp::Application.routes.draw do
   # get RESTful URIs to work
-  resources :users
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
   # above action endows application with all actions needed for RESTful 
   # Users resource, along with a large number of named routes for generating
   # user URIs, so:
@@ -8,7 +12,7 @@ RailsTutorialApp::Application.routes.draw do
   # is no longer needed
   resources :sessions, only: [:new, :create, :destroy]
   resources :microposts, only: [:create, :destroy]
-
+  resources :relationships, only: [:create, :destroy]
   # see further down for the root example used here
   root :to => 'static_pages#home'
   # each of these also give URI helpers in the following form:

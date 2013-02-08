@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
   # before filter arranges for a method to be called before the given actions
-  before_filter :signed_in_user,  only: [:index, :edit, :update, :destroy]  
+  # following and followers actions in the signed_in_user filter enables us
+  # to set title, find user, and retrieve followed_users or followers using defs
+  before_filter :signed_in_user,  
+            only: [:index, :edit, :update, :destroy, :following, :followers]  
   # 2nd before filter to call the correct_user method and make sure only the 
   # current user can only edit his account and nothing else
   before_filter :correct_user,    only: [:edit, :update]
@@ -76,6 +79,20 @@ class UsersController < ApplicationController
       redirect_to users_path
     end
   end
+
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.followed_users.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
+  end 
 
   private 
   # everything after this is private?

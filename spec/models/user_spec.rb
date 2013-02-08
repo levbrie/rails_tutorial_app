@@ -28,6 +28,14 @@ describe User do
 	it {should respond_to(:authenticate)}
 	it {should respond_to(:microposts)}
 	it {should respond_to(:feed)}		# feed of microposts on home page
+	it {should respond_to(:relationships)} # testing for user.relationships attribute
+	it {should respond_to(:followed_users)} # test for user.followed_users attribute
+	it {should respond_to(:reverse_relationships)}
+	it {should respond_to(:followers)}
+	# test for "following" utility methods
+	it {should respond_to(:following?)}
+	it {should respond_to(:follow!)}
+	it {should respond_to(:unfollow!)}
 
 	it {should be_valid}	# sanity check to verify that @user
 	# remember that whenever an object responds to a boolean foo? rspec
@@ -179,7 +187,7 @@ describe User do
 		end
 		let!(:newer_micropost) do
 			FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
-		end
+		end 
 
 		it "should have the right microposts in the right order" do
 			@user.microposts.should == [newer_micropost, older_micropost]
@@ -201,12 +209,49 @@ describe User do
 			let(:unfollowed_post) do
 				FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
 			end
+			# final tests for status feed checking that microposts fo a followed user
+			# appear in the feed
+			let(:followed_user) {FactoryGirl.create(:user)} # create user to follow
+			before do 								# follow the user and create posts for him
+				@user.follow!(followed_user)
+				3.times {followed_user.microposts.create!(content: "Lorem ipsum")}
+			end
 
 			# the array include? method (should include in RSpec boolean convention)
 			# checks if an array includes the given element
 			its(:feed) {should include(newer_micropost)}	
 			its(:feed) {should include(older_micropost)}
 			its(:feed) {should_not include(unfollowed_post)}
+			its(:feed) do 	# make sure user's feed includes the followed user's posts
+				followed_user.microposts.each do |micropost|
+					should include(micropost)
+				end
+			end
+		end
+	end
+
+	describe "following" do
+		let(:other_user) {FactoryGirl.create(:user)}
+		before do
+			@user.save
+			@user.follow!(other_user)
+		end
+
+		it {should be_following(other_user)}
+		its(:followed_users) {should include(other_user)}
+
+		describe "followed user" do
+			# switch subjects using subject method, replacing @user with other_user 
+			# allowing us to test the follower relationship in a natural way
+			subject {other_user} 
+			its(:followers) {should include (@user)}
+		end
+
+		# test for unfollowing a user
+		describe "and unfollowing" do
+			before {@user.unfollow!(other_user)}
+			it {should_not be_following(other_user)}
+			its(:followed_users) {should_not include (other_user)}
 		end
 	end
 end
