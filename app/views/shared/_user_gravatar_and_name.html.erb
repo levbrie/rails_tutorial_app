@@ -1,0 +1,7 @@
+	<a href="<%= user_path(current_user) %>">
+		<!-- uses gravatar_for helper defined in app/helpers/users_helper.rb -->
+		<%= gravatar_for current_user, size: 52 %>
+	</a>
+	<h1>
+		<%= current_user.name %>
+	</h1>

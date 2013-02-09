@@ -253,5 +253,25 @@ describe User do
 			it {should_not be_following(other_user)}
 			its(:followed_users) {should_not include (other_user)}
 		end
+
+		# destroy a user and make sure that user's followers/following relationships
+		# no longer exist
+		describe "relationship associations" do
+			it "should destroy following relationships" do
+				relationships = @user.relationships
+				@user.destroy
+				relationships.each do |relationship|
+					Relationship.find_by_followed_id(relationship.followed_id).should be_nil
+				end
+			end
+
+			it "should destroy followers relationships" do
+				relationships = @user.relationships
+				@user.destroy
+				relationships.each do |relationship|
+					Relationship.find_by_follower_id(relationship.follower_id).should be_nil
+				end
+			end
+		end
 	end
 end
